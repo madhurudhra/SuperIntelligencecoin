@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperintelligenceCoin (SIC) | Dashboard</title>
+    <title>SuperIntelligenceCoin (SIC) | Dashboard</title>
     <!-- Orbitron & Inter Typography -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <!-- Ethers.js CDN for Web3 functionality -->
@@ -91,7 +91,6 @@
             position: relative;
         }
 
-        /* Glowing Intelligence Dot */
         .node-inner::after {
             content: "";
             position: absolute;
@@ -103,7 +102,7 @@
             box-shadow: 0 0 8px var(--neon-blue);
         }
 
-        /* Custom SiCC Wordmark Casing */
+        /* Corrected SIC Wordmark */
         .wordmark {
             font-family: 'Orbitron', sans-serif;
             font-size: 24px;
@@ -113,17 +112,6 @@
         }
 
         .wordmark span.capital { color: var(--neon-blue); }
-        .wordmark span.dot-i { position: relative; display: inline-block; color: var(--text-main); }
-        .wordmark span.dot-i::after {
-            content: "";
-            position: absolute;
-            top: -6px; left: 50%;
-            transform: translateX(-50%);
-            width: 4px; height: 4px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--neon-cyan);
-        }
 
         .header-actions {
             display: flex;
@@ -168,7 +156,6 @@
             line-height: 1.5;
         }
 
-        /* Interactive Elements & Buttons */
         .btn {
             background: linear-gradient(135deg, #0ea5e9, #0284c7);
             color: #ffffff;
@@ -225,7 +212,6 @@
         }
         .copy-btn:hover { color: var(--neon-blue); }
 
-        /* Dashboard Metrics */
         .metrics-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -254,7 +240,6 @@
             color: var(--text-main);
         }
 
-        /* Transfer Form Inputs */
         .form-group {
             display: flex;
             flex-direction: column;
@@ -279,7 +264,6 @@
         }
         .form-input:focus { border-color: var(--neon-blue); }
 
-        /* Footer Layout */
         footer {
             padding: 15px 40px;
             background: rgba(3, 7, 18, 0.9);
@@ -307,7 +291,7 @@
             <div class="node-icon">
                 <div class="node-inner"></div>
             </div>
-            <div class="wordmark">S<span class="capital">I</span><span class="dot-i">i</span>cc</div>
+            <div class="wordmark">S<span class="capital">I</span>C</div>
         </div>
         <div class="header-actions">
             <button class="btn btn-outline" onclick="addTokenToMetamask()">Add to MetaMask</button>
@@ -320,7 +304,7 @@
         <!-- Left Column: Overview & Details -->
         <div class="glass-panel">
             <div>
-                <h2>SuperintelligenceCoin (SIC)</h2>
+                <h2>SuperIntelligenceCoin (SIC)</h2>
                 <p class="desc" style="margin-top: 8px;">Welcome to the official decentralized command center of SIC on the Sepolia Testnet. Powered by high-speed execution matrices and verifiable smart contracts.</p>
             </div>
 
