@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Strict Content Security Policy Header for Web3 Security -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src *;">
-  <title>SuperIntelligenceCoin (SIC) | Secure Command Center</title>
+  <title>Super Intelligence Coin (SiC) | Secure Command Center</title>
   <!-- Google Fonts: Orbitron & Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Ethers.js CDN -->
@@ -63,39 +63,22 @@
       align-items: center;
     }
 
-    /* SpaceX-inspired Vector Logo Mark */
+    /* Vector Logo Mark: Hexagon Node + SiC Wordmark */
     .brand-logo {
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 8px;
+      animation: pulse-glow 3s infinite ease-in-out;
     }
-    .node-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    .logo-svg {
+      width: 200px;
+      height: 65px;
+      filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.6));
     }
-    .node-inner {
-      width: 18px;
-      height: 18px;
-      background: #030712;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      position: relative;
-    }
-    .node-inner::after {
-      content: "";
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 6px; height: 6px;
-      background: #38bdf8;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #38bdf8;
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5)); }
+      50% { transform: scale(1.02); filter: drop-shadow(0 0 22px rgba(14, 165, 233, 0.7)); }
     }
 
     h1 {
@@ -106,7 +89,7 @@
       color: #ffffff;
       text-transform: uppercase;
       text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     .container { max-width: 1240px; margin: 0 auto; padding: 20px 24px; }
@@ -248,11 +231,42 @@
   <div class="hero-container">
     <div class="hero-content">
       <div class="brand-logo">
-        <div class="node-icon">
-          <div class="node-inner"></div>
-        </div>
+        <svg class="logo-svg" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="primaryGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="50%" stop-color="#0ea5e9"/>
+              <stop offset="100%" stop-color="#2563eb"/>
+            </linearGradient>
+            <filter id="svgGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+            </filter>
+          </defs>
+
+          <!-- Hexagon Intelligence Node Icon -->
+          <g transform="translate(5, 5)">
+            <polygon points="30,5 55,20 55,50 30,65 5,50 5,20" stroke="url(#primaryGlow)" stroke-width="3" fill="#030712" filter="url(#svgGlow)"/>
+            <circle cx="30" cy="35" r="7" fill="#38bdf8" filter="url(#svgGlow)"/>
+            <path d="M21 35 L39 35" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <path d="M30 26 L30 44" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- Vector Wordmark: SiC -->
+          <g transform="translate(75, 5)">
+            <!-- Capital S -->
+            <path d="M34 18 C34 10, 14 10, 14 25 C14 40, 34 36, 34 51 C34 64, 14 64, 14 52" stroke="#ffffff" stroke-width="7" stroke-linecap="round" fill="none" filter="url(#svgGlow)"/>
+            
+            <!-- Lowercase i with glowing intelligence dot -->
+            <circle cx="56" cy="18" r="4.5" fill="#38bdf8" filter="url(#svgGlow)"/>
+            <path d="M56 27 L56 55" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+
+            <!-- Lowercase c -->
+            <path d="M98 27 C88 22, 74 24, 74 41 C74 58, 88 60, 98 55" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" fill="none" filter="url(#svgGlow)"/>
+          </g>
+        </svg>
       </div>
-      <h1>SuperIntelligenceCoin (SIC)</h1>
+      <h1>SUPER INTELLIGENCE COIN (SiC)</h1>
     </div>
   </div>
 
@@ -271,22 +285,22 @@
         <div style="text-align: center; margin-bottom: 15px;">
           <button id="connectWalletBtn" class="btn-primary" onclick="connectWallet()">Connect Wallet</button>
           <p id="walletAddress"></p>
-          <p id="tokenBalance"></p>
-          <button id="addTokenBtn" class="btn-secondary" onclick="addTokenToWallet()">Add SIC to MetaMask</button>
+          <p id="tokenBalance">SiC Balance: --</p>
+          <button id="addTokenBtn" class="btn-secondary" onclick="addTokenToWallet()">Add SiC to MetaMask</button>
         </div>
         
         <hr style="border: 0; border-top: 1px solid rgba(56, 189, 248, 0.2); margin: 12px 0;">
         
-        <h3 style="color: #38bdf8; text-align: center; margin-bottom: 10px; font-size: 0.95rem; font-family: 'Orbitron', sans-serif;">Transfer SIC</h3>
+        <h3 style="color: #38bdf8; text-align: center; margin-bottom: 10px; font-size: 0.95rem; font-family: 'Orbitron', sans-serif;">Transfer SiC</h3>
         <div class="form-group">
           <label>Recipient Address</label>
           <input type="text" id="recipientAddress" placeholder="0x..." autocomplete="off">
         </div>
         <div class="form-group">
-          <label>Amount (SIC)</label>
+          <label>Amount (SiC)</label>
           <input type="number" id="transferAmount" placeholder="100" min="0" step="any">
         </div>
-        <button id="sendBtn" class="btn-primary" style="width: 100%;" onclick="transferTokens()">Send SIC</button>
+        <button id="sendBtn" class="btn-primary" style="width: 100%;" onclick="transferTokens()">Send SiC</button>
         <p id="txStatus"></p>
       </div>
 
@@ -295,7 +309,7 @@
         <h3 style="color: #38bdf8; margin-bottom: 12px; text-align: center; font-size: 0.95rem; font-family: 'Orbitron', sans-serif;">Token Information</h3>
         <p><strong>Network:</strong> Ethereum Sepolia Testnet</p>
         <p><strong>Token Standard:</strong> ERC-20 Secure</p>
-        <p><strong>Total Supply:</strong> 1,000,000,000 SIC</p>
+        <p><strong>Total Supply:</strong> 1,000,000,000 SiC</p>
         <p><strong>Decimals:</strong> 18</p>
         <p style="margin-top: 10px;"><strong>Contract Address:</strong> (Click to copy)</p>
         <div class="contract-wrapper" onclick="copyContractAddress()" title="Click to copy address">
@@ -314,11 +328,11 @@
 
     <!-- Bottom Description Text -->
     <div class="bottom-description">
-      SuperIntelligenceCoin (SIC) is an ERC-20 token deployed on the Sepolia testnet. Built for decentralized intelligence architecture.
+      Super Intelligence Coin (SiC) is an ERC-20 token deployed on the Sepolia testnet. Built for decentralized intelligence architecture.
     </div>
 
     <footer>
-      SuperIntelligenceCoin (SIC) &bull; Testnet token for educational purposes only.
+      Super Intelligence Coin (SiC) &bull; Testnet token for educational purposes only.
     </footer>
   </div>
 
@@ -381,10 +395,10 @@
         const decimals = await contract.decimals();
         const balanceFormatted = ethers.utils.formatUnits(balanceWei, decimals);
 
-        document.getElementById('tokenBalance').innerText = 'SIC Balance: ' + parseFloat(balanceFormatted).toFixed(2) + ' SIC';
+        document.getElementById('tokenBalance').innerText = 'SiC Balance: ' + parseFloat(balanceFormatted).toFixed(2) + ' SiC';
       } catch (error) {
         console.error("Error fetching balance:", error);
-        document.getElementById('tokenBalance').innerText = 'SIC Balance: Error loading';
+        document.getElementById('tokenBalance').innerText = 'SiC Balance: 0.00 SiC';
       }
     }
 
@@ -399,7 +413,7 @@
               type: 'ERC20',
               options: {
                 address: CONTRACT_ADDRESS,
-                symbol: 'SIC',
+                symbol: 'SiC',
                 decimals: 18,
               },
             },
