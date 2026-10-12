@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperIntelligenceCoin (SIC) | Dashboard</title>
-    <!-- Orbitron & Inter Typography -->
+    <title>SuperIntelligence Ecosystem | Web3 Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    <!-- Ethers.js CDN for Web3 functionality -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         :root {
             --bg-deep: #030712;
             --panel-bg: rgba(15, 23, 42, 0.75);
             --border-glow: rgba(56, 189, 248, 0.2);
-            --neon-blue: #38bdf8;
-            --neon-cyan: #22d3ee;
+            --accent-main: #38bdf8;
+            --accent-glow: #22d3ee;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+        }
+
+        /* SICC Theme State Overrides */
+        body.theme-sicc {
+            --border-glow: rgba(244, 63, 94, 0.3);
+            --accent-main: #f43f5e;
+            --accent-glow: #fb7185;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,324 +37,182 @@
             flex-direction: column;
             justify-content: space-between;
             position: relative;
+            transition: background 0.3s ease;
         }
 
-        /* Pure CSS Deep Space Cyber-Grid Background */
+        /* Pure CSS Space Grid */
         body::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
             z-index: -1;
         }
 
-        body::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        /* Header & Vector Branding */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
-            background: rgba(3, 7, 18, 0.8);
-            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 16px 35px;
+            background: rgba(3, 7, 18, 0.85);
+            border-bottom: 1px solid var(--border-glow);
             backdrop-filter: blur(10px);
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        /* Futuristic Hexagon Intelligence Node Icon */
+        .brand { display: flex; align-items: center; gap: 12px; }
         .node-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--accent-main), var(--accent-glow));
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            display: flex; align-items: center; justify-content: center;
         }
-
         .node-inner {
-            width: 16px;
-            height: 16px;
-            background: #030712;
+            width: 14px; height: 14px; background: #030712;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            position: relative;
         }
 
-        .node-inner::after {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 6px; height: 6px;
-            background: var(--neon-blue);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--neon-blue);
-        }
-
-        /* Corrected SIC Wordmark */
         .wordmark {
             font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: var(--text-main);
+            font-size: 22px; font-weight: 900;
         }
 
-        .wordmark span.capital { color: var(--neon-blue); }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
+        .switcher {
+            display: flex; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glow); border-radius: 8px; padding: 3px;
+        }
+        .tab-btn {
+            background: none; border: none; color: var(--text-muted);
+            padding: 6px 14px; font-family: 'Orbitron', sans-serif; font-size: 11px;
+            cursor: pointer; border-radius: 6px; transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--accent-main); color: #030712; font-weight: bold;
         }
 
-        /* Main Grid Layout (Single-Screen) */
         main {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 25px;
-            padding: 25px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            align-items: center;
+            flex: 1; display: grid; grid-template-columns: 1fr 1fr;
+            gap: 20px; padding: 20px 35px; max-width: 1400px; margin: 0 auto;
+            width: 100%; align-items: center;
         }
 
         .glass-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
-            padding: 30px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            background: var(--panel-bg); border: 1px solid var(--border-glow);
+            border-radius: 14px; padding: 24px; backdrop-filter: blur(12px);
+            display: flex; flex-direction: column; gap: 16px;
         }
 
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 20px;
-            color: var(--neon-blue);
-            letter-spacing: 0.5px;
-        }
-
-        p.desc {
-            color: var(--text-muted);
-            font-size: 14px;
-            line-height: 1.5;
-        }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 18px; color: var(--accent-main); }
+        .desc { color: var(--text-muted); font-size: 13px; line-height: 1.4; }
 
         .btn {
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            color: #ffffff;
-            border: none;
-            padding: 12px 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-main), var(--accent-glow));
+            color: #030712; border: none; padding: 10px 16px;
+            font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 700;
+            border-radius: 6px; cursor: pointer; transition: 0.2s; text-align: center;
         }
-
-        .btn:hover {
-            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-            transform: translateY(-1px);
-        }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            color: var(--neon-blue);
-        }
-        .btn-outline:hover {
-            background: rgba(56, 189, 248, 0.1);
-            color: #ffffff;
+            background: transparent; border: 1px solid var(--border-glow); color: var(--accent-main);
         }
 
         .contract-box {
-            background: rgba(3, 7, 18, 0.6);
-            border: 1px dashed rgba(56, 189, 248, 0.3);
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: monospace;
-            font-size: 13px;
-            color: var(--neon-cyan);
+            background: rgba(3, 7, 18, 0.6); border: 1px dashed var(--border-glow);
+            padding: 10px 14px; border-radius: 6px; display: flex;
+            justify-content: space-between; align-items: center;
+            font-family: monospace; font-size: 12px; color: var(--accent-glow);
         }
 
-        .copy-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 12px;
-            transition: color 0.2s;
-        }
-        .copy-btn:hover { color: var(--neon-blue); }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .metric-card {
-            background: rgba(3, 7, 18, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 10px;
+            background: rgba(3, 7, 18, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px; border-radius: 8px;
         }
+        .metric-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .metric-value { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; }
 
-        .metric-title {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .metric-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 11px; color: var(--text-muted); }
         .form-input {
-            background: rgba(3, 7, 18, 0.6);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 10px 14px;
-            border-radius: 6px;
-            color: #ffffff;
-            font-family: monospace;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s;
+            background: rgba(3, 7, 18, 0.6); border: 1px solid var(--border-glow);
+            padding: 8px 12px; border-radius: 6px; color: #fff; font-family: monospace; font-size: 12px;
         }
-        .form-input:focus { border-color: var(--neon-blue); }
+
+        .log-box {
+            background: rgba(3, 7, 18, 0.8); border: 1px solid var(--border-glow);
+            border-radius: 6px; padding: 10px; height: 70px; overflow-y: auto;
+            font-family: monospace; font-size: 11px; color: var(--text-muted);
+        }
 
         footer {
-            padding: 15px 40px;
-            background: rgba(3, 7, 18, 0.9);
-            border-top: 1px solid rgba(56, 189, 248, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            color: var(--text-muted);
+            padding: 12px 35px; background: rgba(3, 7, 18, 0.9);
+            border-top: 1px solid var(--border-glow); display: flex;
+            justify-content: space-between; font-size: 11px; color: var(--text-muted);
         }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-        }
-        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--neon-blue); }
     </style>
 </head>
-<body>
+<body class="theme-sic">
 
-    <!-- Header & Branding -->
     <header>
         <div class="brand">
-            <div class="node-icon">
-                <div class="node-inner"></div>
-            </div>
-            <div class="wordmark">S<span class="capital">I</span>C</div>
+            <div class="node-icon"><div class="node-inner"></div></div>
+            <div class="wordmark" id="brandTitle">SIC</div>
         </div>
-        <div class="header-actions">
-            <button class="btn btn-outline" onclick="addTokenToMetamask()">Add to MetaMask</button>
+
+        <!-- Toggle Switcher for SIC vs SICC Landing Pages -->
+        <div class="switcher">
+            <button class="tab-btn active" id="tabSIC" onclick="switchProject('SIC')">SIC Token</button>
+            <button class="tab-btn" id="tabSICC" onclick="switchProject('SICC')">SICC Token</button>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="addTokenToMetamask()">+ Wallet</button>
             <button class="btn" id="connectWalletBtn" onclick="connectWallet()">Connect Wallet</button>
         </div>
     </header>
 
-    <!-- Main Content Grid -->
     <main>
-        <!-- Left Column: Overview & Details -->
+        <!-- Left Panel: Token & Faucet Details -->
         <div class="glass-panel">
             <div>
-                <h2>SuperIntelligenceCoin (SIC)</h2>
-                <p class="desc" style="margin-top: 8px;">Welcome to the official decentralized command center of SIC on the Sepolia Testnet. Powered by high-speed execution matrices and verifiable smart contracts.</p>
+                <h2 id="projectTitle">SuperIntelligenceCoin (SIC)</h2>
+                <p class="desc" id="projectDesc">Decentralized command platform on Sepolia Testnet.</p>
             </div>
 
             <div class="contract-box">
                 <span id="contractAddrText">0x961e1206076E5cbEa1e1180342F6BF327e9de0f2</span>
-                <button class="copy-btn" onclick="copyContractAddress()">[ COPY ]</button>
+                <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;" onclick="copyContractAddress()">[COPY]</button>
             </div>
 
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-title">Network</div>
-                    <div class="metric-value">Sepolia</div>
+                    <div class="metric-title">Sepolia Gas Tracker</div>
+                    <div class="metric-value" id="gasPriceVal">-- Gwei</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-title">Standard</div>
-                    <div class="metric-value">ERC-20</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">Token Symbol</div>
-                    <div class="metric-value">SIC</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">Decimals</div>
-                    <div class="metric-value">18</div>
+                    <div class="metric-title">Testnet Faucet</div>
+                    <div class="metric-value"><button class="btn btn-outline" style="padding: 2px 8px; font-size: 10px;" onclick="claimFaucet()">Claim 100 Tokens</button></div>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 15px; margin-top: 5px;">
-                <a href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank" class="btn btn-outline" style="flex: 1;">Explore Etherscan</a>
-                <a href="#community" class="btn btn-outline" style="flex: 1;">Join Community</a>
-            </div>
+            <a id="etherscanBtn" href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank" class="btn btn-outline">View on Sepolia Etherscan</a>
         </div>
 
-        <!-- Right Column: Web3 Dashboard & Transfers -->
+        <!-- Right Panel: Command & Transaction Logs -->
         <div class="glass-panel">
             <h2>Command Dashboard</h2>
-            <p class="desc">Manage assets, inspect real-time balances, and execute direct testnet token transfers securely.</p>
 
-            <div class="metrics-grid" style="grid-template-columns: 1fr;">
-                <div class="metric-card" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div class="metric-title">Your SIC Balance</div>
-                        <div class="metric-value" id="userBalance">0.00 SIC</div>
-                    </div>
-                    <div style="font-size: 11px; color: var(--neon-cyan);" id="walletStatusBadge">Disconnected</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Token Balance</div>
+                    <div class="metric-value" id="userBalance">0.00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Wallet Status</div>
+                    <div class="metric-value" id="walletStatusBadge" style="font-size: 12px; color: var(--accent-glow);">Disconnected</div>
                 </div>
             </div>
 
@@ -359,122 +222,141 @@
             </div>
 
             <div class="form-group">
-                <label>Transfer Amount (SIC)</label>
+                <label>Amount</label>
                 <input type="number" id="transferAmount" class="form-input" placeholder="0.0">
             </div>
 
-            <button class="btn" onclick="transferTokens()" style="width: 100%;">Execute Transfer</button>
+            <button class="btn" onclick="transferTokens()">Execute Transfer</button>
+
+            <!-- Real-time Activity Logs -->
+            <div class="log-box" id="activityLog">
+                [SYSTEM] Dashboard initialized on Sepolia. Select project to view contract logic.
+            </div>
         </div>
     </main>
 
-    <!-- Footer Layout -->
     <footer>
-        <div>SIC Testnet Environment — Built for decentralized intelligence architecture.</div>
-        <div class="footer-links">
-            <a href="https://sepolia.etherscan.io/" target="_blank">Etherscan</a>
-            <a href="https://github.com" target="_blank">GitHub Repository</a>
-            <a href="#">Docs</a>
-        </div>
+        <div>SuperIntelligence Ecosystem Hub</div>
+        <div>Network: Sepolia Testnet</div>
     </footer>
 
     <script>
-        const CONTRACT_ADDRESS = "0x961e1206076E5cbEa1e1180342F6BF327e9de0f2";
-        const ERC20_ABI = [
-            "function balanceOf(address account) view returns (uint256)",
-            "function transfer(address recipient, uint256 amount) returns (bool)",
-            "function decimals() view returns (uint8)"
-        ];
+        const PROJECTS = {
+            SIC: {
+                title: "SuperIntelligenceCoin (SIC)",
+                symbol: "SIC",
+                address: "0x961e1206076E5cbEa1e1180342F6BF327e9de0f2",
+                theme: "theme-sic",
+                desc: "Official homepage and Web3 interaction layer for SIC."
+            },
+            SICC: {
+                title: "SuperIntelligenceCoin Classic (SICC)",
+                symbol: "SICC",
+                address: "0x0000000000000000000000000000000000000000", // Update with your SICC contract address
+                theme: "theme-sicc",
+                desc: "Distinct landing portal and command unit for SICC."
+            }
+        };
 
+        let currentProject = "SIC";
         let provider, signer, tokenContract;
 
-        async function connectWallet() {
+        function logActivity(msg) {
+            const logBox = document.getElementById("activityLog");
+            logBox.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}<br>` + logBox.innerHTML;
+        }
+
+        function switchProject(key) {
+            currentProject = key;
+            const p = PROJECTS[key];
+            document.body.className = p.theme;
+            document.getElementById("brandTitle").innerText = p.symbol;
+            document.getElementById("projectTitle").innerText = p.title;
+            document.getElementById("projectDesc").innerText = p.desc;
+            document.getElementById("contractAddrText").innerText = p.address;
+            document.getElementById("etherscanBtn").href = `https://sepolia.etherscan.io/address/${p.address}`;
+            
+            document.getElementById("tabSIC").classList.toggle("active", key === "SIC");
+            document.getElementById("tabSICC").classList.toggle("active", key === "SICC");
+
+            logActivity(`Switched active view to ${p.symbol}.`);
+            if (signer) connectWallet();
+        }
+
+        async function fetchGasPrice() {
             if (window.ethereum) {
                 try {
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                    await provider.send("eth_requestAccounts", []);
-                    signer = provider.getSigner();
-                    const address = await signer.getAddress();
-                    
-                    tokenContract = new ethers.Contract(CONTRACT_ADDRESS, ERC20_ABI, signer);
-                    
-                    document.getElementById("connectWalletBtn").innerText = address.substring(0, 6) + "..." + address.substring(38);
-                    document.getElementById("walletStatusBadge").innerText = "Connected";
-                    document.getElementById("walletStatusBadge").style.color = "#38bdf8";
-
-                    await updateBalance(address);
-                } catch (error) {
-                    console.error("User denied account access", error);
+                    const tempProvider = new ethers.providers.Web3Provider(window.ethereum);
+                    const gas = await tempProvider.getGasPrice();
+                    document.getElementById("gasPriceVal").innerText = Math.round(ethers.utils.formatUnits(gas, "gwei")) + " Gwei";
+                } catch (e) {
+                    console.error("Gas fetch error", e);
                 }
-            } else {
-                alert("MetaMask not detected. Please install a Web3 browser extension.");
             }
         }
 
-        async function updateBalance(accountAddress) {
+        async function connectWallet() {
+            if (!window.ethereum) return alert("MetaMask not found.");
             try {
-                const balance = await tokenContract.balanceOf(accountAddress);
-                const formatted = ethers.utils.formatUnits(balance, 18);
-                document.getElementById("userBalance").innerText = parseFloat(formatted).toFixed(2) + " SIC";
-            } catch (err) {
-                console.error("Failed to fetch balance", err);
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                signer = provider.getSigner();
+                const addr = await signer.getAddress();
+
+                const p = PROJECTS[currentProject];
+                const abi = [
+                    "function balanceOf(address) view returns (uint256)",
+                    "function transfer(address, uint256) returns (bool)"
+                ];
+                tokenContract = new ethers.Contract(p.address, abi, signer);
+
+                document.getElementById("connectWalletBtn").innerText = addr.substring(0, 6) + "...";
+                document.getElementById("walletStatusBadge").innerText = "Connected";
+
+                const bal = await tokenContract.balanceOf(addr);
+                document.getElementById("userBalance").innerText = parseFloat(ethers.utils.formatUnits(bal, 18)).toFixed(2) + " " + p.symbol;
+
+                logActivity(`Wallet connected: ${addr}`);
+                fetchGasPrice();
+            } catch (e) {
+                logActivity("Connection failed.");
             }
+        }
+
+        async function claimFaucet() {
+            logActivity(`Faucet requested for ${PROJECTS[currentProject].symbol}. (Simulated execution on Sepolia)`);
+            alert("100 " + PROJECTS[currentProject].symbol + " testnet tokens requested successfully!");
         }
 
         async function transferTokens() {
-            if (!tokenContract) {
-                alert("Please connect your wallet first.");
-                return;
-            }
-            const recipient = document.getElementById("recipientAddr").value;
-            const amount = document.getElementById("transferAmount").value;
-            if (!recipient || !amount) {
-                alert("Please fill in recipient address and amount.");
-                return;
-            }
+            if (!tokenContract) return alert("Connect wallet first.");
+            const to = document.getElementById("recipientAddr").value;
+            const amt = document.getElementById("transferAmount").value;
             try {
-                const parsedAmount = ethers.utils.parseUnits(amount, 18);
-                const tx = await tokenContract.transfer(recipient, parsedAmount);
-                alert("Transaction submitted! Hash: " + tx.hash);
+                const tx = await tokenContract.transfer(to, ethers.utils.parseUnits(amt, 18));
+                logActivity(`Tx Submitted: ${tx.hash}`);
                 await tx.wait();
-                alert("Transfer confirmed!");
-                const address = await signer.getAddress();
-                await updateBalance(address);
-            } catch (err) {
-                console.error("Transfer failed", err);
-                alert("Transfer failed: " + (err.message || err));
+                logActivity("Tx Confirmed!");
+            } catch (e) {
+                logActivity("Transfer failed or rejected.");
             }
         }
 
         async function addTokenToMetamask() {
-            if (window.ethereum) {
-                try {
-                    await window.ethereum.request({
-                        method: 'wallet_watchAsset',
-                        params: {
-                            type: 'ERC20',
-                            options: {
-                                address: CONTRACT_ADDRESS,
-                                symbol: 'SIC',
-                                decimals: 18,
-                            },
-                        },
-                    });
-                } catch (error) {
-                    console.error(error);
-                }
-            } else {
-                alert('MetaMask is not installed.');
-            }
+            if (!window.ethereum) return;
+            const p = PROJECTS[currentProject];
+            await window.ethereum.request({
+                method: 'wallet_watchAsset',
+                params: { type: 'ERC20', options: { address: p.address, symbol: p.symbol, decimals: 18 } }
+            });
         }
 
         function copyContractAddress() {
-            navigator.clipboard.writeText(CONTRACT_ADDRESS);
-            const btn = document.querySelector('.copy-btn');
-            btn.innerText = "[ COPIED! ]";
-            setTimeout(() => {
-                btn.innerText = "[ COPY ]";
-            }, 2000);
+            navigator.clipboard.writeText(PROJECTS[currentProject].address);
+            logActivity("Contract address copied.");
         }
+
+        setInterval(fetchGasPrice, 12000);
     </script>
 </body>
 </html>
