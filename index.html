@@ -3,38 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperIntelligenceCoin (SIC)</title>
+    <title>SuperintelligenceCoin (SIC) | Dashboard</title>
+    <!-- Orbitron & Inter Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- Ethers.js CDN for Web3 functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; text-align: center; padding: 50px; margin: 0; }
-        .card { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        h1 { color: #38bdf8; }
-        p { color: #94a3b8; }
-        button { background: #38bdf8; color: #0f172a; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.2s; }
-        button:hover { background: #0ea5e9; }
-        .contract-box { background: #0f172a; padding: 15px; border-radius: 6px; margin: 20px 0; font-family: monospace; font-size: 14px; word-break: break-all; color: #38bdf8; }
-        a { color: #38bdf8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        :root {
+            --bg-deep: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.75);
+            --border-glow: rgba(56, 189, 248, 0.2);
+            --neon-blue: #38bdf8;
+            --neon-cyan: #22d3ee;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* Pure CSS Deep Space Cyber-Grid Background */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        /* Header & Vector Branding */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(3, 7, 18, 0.8);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Futuristic Hexagon Intelligence Node Icon */
+        .node-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .node-inner {
+            width: 16px;
+            height: 16px;
+            background: #030712;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+        }
+
+        /* Glowing Intelligence Dot */
+        .node-inner::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px; height: 6px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        /* Custom SiCC Wordmark Casing */
+        .wordmark {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        .wordmark span.capital { color: var(--neon-blue); }
+        .wordmark span.dot-i { position: relative; display: inline-block; color: var(--text-main); }
+        .wordmark span.dot-i::after {
+            content: "";
+            position: absolute;
+            top: -6px; left: 50%;
+            transform: translateX(-50%);
+            width: 4px; height: 4px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--neon-cyan);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Main Grid Layout (Single-Screen) */
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            padding: 25px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            align-items: center;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: var(--neon-blue);
+            letter-spacing: 0.5px;
+        }
+
+        p.desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Interactive Elements & Buttons */
+        .btn {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: var(--neon-blue);
+        }
+        .btn-outline:hover {
+            background: rgba(56, 189, 248, 0.1);
+            color: #ffffff;
+        }
+
+        .contract-box {
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px dashed rgba(56, 189, 248, 0.3);
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+            font-size: 13px;
+            color: var(--neon-cyan);
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        .copy-btn:hover { color: var(--neon-blue); }
+
+        /* Dashboard Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: rgba(3, 7, 18, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .metric-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Transfer Form Inputs */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .form-input {
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 10px 14px;
+            border-radius: 6px;
+            color: #ffffff;
+            font-family: monospace;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: var(--neon-blue); }
+
+        /* Footer Layout */
+        footer {
+            padding: 15px 40px;
+            background: rgba(3, 7, 18, 0.9);
+            border-top: 1px solid rgba(56, 189, 248, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--neon-blue); }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>SuperIntelligenceCoin (SIC)</h1>
-        <p>Welcome to the official home of SIC on the Sepolia Testnet.</p>
-        
-        <div class="contract-box">
-            <strong>Contract Address:</strong><br>
-            <span id="contract-addr">0x961e1206076E5cbEa1e1180342F6BF327e9de0f2</span>
+    <!-- Header & Branding -->
+    <header>
+        <div class="brand">
+            <div class="node-icon">
+                <div class="node-inner"></div>
+            </div>
+            <div class="wordmark">S<span class="capital">I</span><span class="dot-i">i</span>cc</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline" onclick="addTokenToMetamask()">Add to MetaMask</button>
+            <button class="btn" id="connectWalletBtn" onclick="connectWallet()">Connect Wallet</button>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main>
+        <!-- Left Column: Overview & Details -->
+        <div class="glass-panel">
+            <div>
+                <h2>SuperintelligenceCoin (SIC)</h2>
+                <p class="desc" style="margin-top: 8px;">Welcome to the official decentralized command center of SIC on the Sepolia Testnet. Powered by high-speed execution matrices and verifiable smart contracts.</p>
+            </div>
+
+            <div class="contract-box">
+                <span id="contractAddrText">0x961e1206076E5cbEa1e1180342F6BF327e9de0f2</span>
+                <button class="copy-btn" onclick="copyContractAddress()">[ COPY ]</button>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Network</div>
+                    <div class="metric-value">Sepolia</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Standard</div>
+                    <div class="metric-value">ERC-20</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Token Symbol</div>
+                    <div class="metric-value">SIC</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Decimals</div>
+                    <div class="metric-value">18</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 5px;">
+                <a href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank" class="btn btn-outline" style="flex: 1;">Explore Etherscan</a>
+                <a href="#community" class="btn btn-outline" style="flex: 1;">Join Community</a>
+            </div>
         </div>
 
-        <button onclick="addTokenToMetamask()">Add SIC to MetaMask</button>
-        
-        <br><br>
-        <p><a href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank">View on Sepolia Etherscan</a></p>
-    </div>
+        <!-- Right Column: Web3 Dashboard & Transfers -->
+        <div class="glass-panel">
+            <h2>Command Dashboard</h2>
+            <p class="desc">Manage assets, inspect real-time balances, and execute direct testnet token transfers securely.</p>
+
+            <div class="metrics-grid" style="grid-template-columns: 1fr;">
+                <div class="metric-card" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="metric-title">Your SIC Balance</div>
+                        <div class="metric-value" id="userBalance">0.00 SIC</div>
+                    </div>
+                    <div style="font-size: 11px; color: var(--neon-cyan);" id="walletStatusBadge">Disconnected</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Recipient Address</label>
+                <input type="text" id="recipientAddr" class="form-input" placeholder="0x...">
+            </div>
+
+            <div class="form-group">
+                <label>Transfer Amount (SIC)</label>
+                <input type="number" id="transferAmount" class="form-input" placeholder="0.0">
+            </div>
+
+            <button class="btn" onclick="transferTokens()" style="width: 100%;">Execute Transfer</button>
+        </div>
+    </main>
+
+    <!-- Footer Layout -->
+    <footer>
+        <div>SIC Testnet Environment — Built for decentralized intelligence architecture.</div>
+        <div class="footer-links">
+            <a href="https://sepolia.etherscan.io/" target="_blank">Etherscan</a>
+            <a href="https://github.com" target="_blank">GitHub Repository</a>
+            <a href="#">Docs</a>
+        </div>
+    </footer>
 
     <script>
-        const SIC_CONTRACT_ADDRESS = "0x961e1206076E5cbEa1e1180342F6BF327e9de0f2";
+        const CONTRACT_ADDRESS = "0x961e1206076E5cbEa1e1180342F6BF327e9de0f2";
+        const ERC20_ABI = [
+            "function balanceOf(address account) view returns (uint256)",
+            "function transfer(address recipient, uint256 amount) returns (bool)",
+            "function decimals() view returns (uint8)"
+        ];
+
+        let provider, signer, tokenContract;
+
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    signer = provider.getSigner();
+                    const address = await signer.getAddress();
+                    
+                    tokenContract = new ethers.Contract(CONTRACT_ADDRESS, ERC20_ABI, signer);
+                    
+                    document.getElementById("connectWalletBtn").innerText = address.substring(0, 6) + "..." + address.substring(38);
+                    document.getElementById("walletStatusBadge").innerText = "Connected";
+                    document.getElementById("walletStatusBadge").style.color = "#38bdf8";
+
+                    await updateBalance(address);
+                } catch (error) {
+                    console.error("User denied account access", error);
+                }
+            } else {
+                alert("MetaMask not detected. Please install a Web3 browser extension.");
+            }
+        }
+
+        async function updateBalance(accountAddress) {
+            try {
+                const balance = await tokenContract.balanceOf(accountAddress);
+                const formatted = ethers.utils.formatUnits(balance, 18);
+                document.getElementById("userBalance").innerText = parseFloat(formatted).toFixed(2) + " SIC";
+            } catch (err) {
+                console.error("Failed to fetch balance", err);
+            }
+        }
+
+        async function transferTokens() {
+            if (!tokenContract) {
+                alert("Please connect your wallet first.");
+                return;
+            }
+            const recipient = document.getElementById("recipientAddr").value;
+            const amount = document.getElementById("transferAmount").value;
+            if (!recipient || !amount) {
+                alert("Please fill in recipient address and amount.");
+                return;
+            }
+            try {
+                const parsedAmount = ethers.utils.parseUnits(amount, 18);
+                const tx = await tokenContract.transfer(recipient, parsedAmount);
+                alert("Transaction submitted! Hash: " + tx.hash);
+                await tx.wait();
+                alert("Transfer confirmed!");
+                const address = await signer.getAddress();
+                await updateBalance(address);
+            } catch (err) {
+                console.error("Transfer failed", err);
+                alert("Transfer failed: " + (err.message || err));
+            }
+        }
 
         async function addTokenToMetamask() {
             if (window.ethereum) {
@@ -44,7 +469,7 @@
                         params: {
                             type: 'ERC20',
                             options: {
-                                address: SIC_CONTRACT_ADDRESS,
+                                address: CONTRACT_ADDRESS,
                                 symbol: 'SIC',
                                 decimals: 18,
                             },
@@ -57,7 +482,15 @@
                 alert('MetaMask is not installed.');
             }
         }
-    </script>
 
+        function copyContractAddress() {
+            navigator.clipboard.writeText(CONTRACT_ADDRESS);
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = "[ COPIED! ]";
+            setTimeout(() => {
+                btn.innerText = "[ COPY ]";
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
