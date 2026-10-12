@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperIntelligenceCoin (SIC)</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; text-align: center; padding: 50px; margin: 0; }
+        .card { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        h1 { color: #38bdf8; }
+        p { color: #94a3b8; }
+        button { background: #38bdf8; color: #0f172a; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.2s; }
+        button:hover { background: #0ea5e9; }
+        .contract-box { background: #0f172a; padding: 15px; border-radius: 6px; margin: 20px 0; font-family: monospace; font-size: 14px; word-break: break-all; color: #38bdf8; }
+        a { color: #38bdf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>SuperIntelligenceCoin (SIC)</h1>
+        <p>Welcome to the official home of SIC on the Sepolia Testnet.</p>
+        
+        <div class="contract-box">
+            <strong>Contract Address:</strong><br>
+            <span id="contract-addr">0x961e1206076E5cbEa1e1180342F6BF327e9de0f2</span>
+        </div>
+
+        <button onclick="addTokenToMetamask()">Add SIC to MetaMask</button>
+        
+        <br><br>
+        <p><a href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank">View on Sepolia Etherscan</a></p>
+    </div>
+
+    <script>
+        const SIC_CONTRACT_ADDRESS = "0x961e1206076E5cbEa1e1180342F6BF327e9de0f2";
+
+        async function addTokenToMetamask() {
+            if (window.ethereum) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_watchAsset',
+                        params: {
+                            type: 'ERC20',
+                            options: {
+                                address: SIC_CONTRACT_ADDRESS,
+                                symbol: 'SIC',
+                                decimals: 18,
+                            },
+                        },
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                alert('MetaMask is not installed.');
+            }
+        }
+    </script>
+
+</body>
+</html>
