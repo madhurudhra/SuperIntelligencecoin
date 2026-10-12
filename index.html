@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperIntelligenceCoin (SIC) | Dashboard</title>
+    <!-- Strict Content Security Policy Header for Web3 Security -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src *;">
+    <title>SuperIntelligenceCoin (SIC) | Secure Command Center</title>
     <!-- Orbitron & Inter Typography -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    <!-- Ethers.js CDN for Web3 functionality -->
+    <!-- Pinned Stable Ethers.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         :root {
             --bg-deep: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.75);
-            --border-glow: rgba(56, 189, 248, 0.2);
+            --panel-bg: rgba(15, 23, 42, 0.85);
+            --border-glow: rgba(56, 189, 248, 0.25);
             --neon-blue: #38bdf8;
             --neon-cyan: #22d3ee;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --danger: #f43f5e;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,8 +43,8 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+                linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
             background-size: 40px 40px;
             z-index: -1;
         }
@@ -50,7 +53,7 @@
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
             z-index: -1;
         }
 
@@ -60,9 +63,9 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
-            background: rgba(3, 7, 18, 0.8);
+            background: rgba(3, 7, 18, 0.9);
             border-bottom: 1px solid rgba(56, 189, 248, 0.15);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
         }
 
         .brand {
@@ -135,8 +138,8 @@
             border: 1px solid var(--border-glow);
             border-radius: 16px;
             padding: 30px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -172,10 +175,15 @@
             display: inline-block;
         }
 
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             background: linear-gradient(135deg, #38bdf8, #0ea5e9);
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
             transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .btn-outline {
@@ -183,13 +191,13 @@
             border: 1px solid rgba(56, 189, 248, 0.4);
             color: var(--neon-blue);
         }
-        .btn-outline:hover {
+        .btn-outline:hover:not(:disabled) {
             background: rgba(56, 189, 248, 0.1);
             color: #ffffff;
         }
 
         .contract-box {
-            background: rgba(3, 7, 18, 0.6);
+            background: rgba(3, 7, 18, 0.7);
             border: 1px dashed rgba(56, 189, 248, 0.3);
             padding: 12px 16px;
             border-radius: 8px;
@@ -218,7 +226,7 @@
         }
 
         .metric-card {
-            background: rgba(3, 7, 18, 0.5);
+            background: rgba(3, 7, 18, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 15px;
             border-radius: 10px;
@@ -251,7 +259,7 @@
         }
 
         .form-input {
-            background: rgba(3, 7, 18, 0.6);
+            background: rgba(3, 7, 18, 0.7);
             border: 1px solid rgba(56, 189, 248, 0.2);
             padding: 10px 14px;
             border-radius: 6px;
@@ -265,7 +273,7 @@
 
         footer {
             padding: 15px 40px;
-            background: rgba(3, 7, 18, 0.9);
+            background: rgba(3, 7, 18, 0.95);
             border-top: 1px solid rgba(56, 189, 248, 0.1);
             display: flex;
             justify-content: space-between;
@@ -293,7 +301,7 @@
             <div class="wordmark">S<span class="capital">I</span>C</div>
         </div>
         <div class="header-actions">
-            <button class="btn btn-outline" onclick="addTokenToMetamask()">Add to MetaMask</button>
+            <button class="btn btn-outline" id="addMetaMaskBtn" onclick="addTokenToMetamask()">Add to MetaMask</button>
             <button class="btn" id="connectWalletBtn" onclick="connectWallet()">Connect Wallet</button>
         </div>
     </header>
@@ -304,7 +312,7 @@
         <div class="glass-panel">
             <div>
                 <h2>SuperIntelligenceCoin (SIC)</h2>
-                <p class="desc" style="margin-top: 8px;">Welcome to the official decentralized command center of SIC on the Sepolia Testnet. Powered by high-speed execution matrices and verifiable smart contracts.</p>
+                <p class="desc" style="margin-top: 8px;">Official secure command center of SIC on the Sepolia Testnet. Hardened client environment with runtime input sanitization.</p>
             </div>
 
             <div class="contract-box">
@@ -315,11 +323,11 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-title">Network</div>
-                    <div class="metric-value">Sepolia</div>
+                    <div class="metric-value">Sepolia (11155111)</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">Standard</div>
-                    <div class="metric-value">ERC-20</div>
+                    <div class="metric-value">ERC-20 Secure</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">Token Symbol</div>
@@ -332,7 +340,7 @@
             </div>
 
             <div style="display: flex; gap: 15px; margin-top: 5px;">
-                <a href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank" class="btn btn-outline" style="flex: 1;">Explore Etherscan</a>
+                <a href="https://sepolia.etherscan.io/address/0x961e1206076E5cbEa1e1180342F6BF327e9de0f2" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="flex: 1;">Explore Etherscan</a>
                 <a href="#community" class="btn btn-outline" style="flex: 1;">Join Community</a>
             </div>
         </div>
@@ -340,7 +348,7 @@
         <!-- Right Column: Web3 Dashboard & Transfers -->
         <div class="glass-panel">
             <h2>Command Dashboard</h2>
-            <p class="desc">Manage assets, inspect real-time balances, and execute direct testnet token transfers securely.</p>
+            <p class="desc">Execute verified transfers with automatic recipient validation and double-click protection.</p>
 
             <div class="metrics-grid" style="grid-template-columns: 1fr;">
                 <div class="metric-card" style="display: flex; justify-content: space-between; align-items: center;">
@@ -354,30 +362,32 @@
 
             <div class="form-group">
                 <label>Recipient Address</label>
-                <input type="text" id="recipientAddr" class="form-input" placeholder="0x...">
+                <input type="text" id="recipientAddr" class="form-input" placeholder="0x..." autocomplete="off">
             </div>
 
             <div class="form-group">
                 <label>Transfer Amount (SIC)</label>
-                <input type="number" id="transferAmount" class="form-input" placeholder="0.0">
+                <input type="number" id="transferAmount" class="form-input" placeholder="0.0" min="0" step="any">
             </div>
 
-            <button class="btn" onclick="transferTokens()" style="width: 100%;">Execute Transfer</button>
+            <button class="btn" id="transferBtn" onclick="transferTokens()" style="width: 100%;">Execute Transfer</button>
         </div>
     </main>
 
     <!-- Footer Layout -->
     <footer>
-        <div>SIC Testnet Environment — Built for decentralized intelligence architecture.</div>
+        <div>SIC Testnet Environment — Secured Client Interface.</div>
         <div class="footer-links">
-            <a href="https://sepolia.etherscan.io/" target="_blank">Etherscan</a>
-            <a href="https://github.com" target="_blank">GitHub Repository</a>
-            <a href="#">Docs</a>
+            <a href="https://sepolia.etherscan.io/" target="_blank" rel="noopener noreferrer">Etherscan</a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+            <a href="#">Security Docs</a>
         </div>
     </footer>
 
     <script>
+        // Enforce strict constant configuration
         const CONTRACT_ADDRESS = "0x961e1206076E5cbEa1e1180342F6BF327e9de0f2";
+        const SEPOLIA_CHAIN_ID = "0xaa36a7"; // Sepolia Chain ID in hex (11155111)
         const ERC20_ABI = [
             "function balanceOf(address account) view returns (uint256)",
             "function transfer(address recipient, uint256 amount) returns (bool)",
@@ -387,9 +397,27 @@
         let provider, signer, tokenContract;
 
         async function connectWallet() {
+            const btn = document.getElementById("connectWalletBtn");
             if (window.ethereum) {
                 try {
+                    btn.disabled = true;
                     provider = new ethers.providers.Web3Provider(window.ethereum);
+                    
+                    // Enforce Sepolia Network check
+                    const network = await provider.getNetwork();
+                    if (network.chainId !== 11155111) {
+                        alert("Please switch your MetaMask network to Sepolia Testnet.");
+                        try {
+                            await window.ethereum.request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: SEPOLIA_CHAIN_ID }],
+                            });
+                        } catch (switchError) {
+                            btn.disabled = false;
+                            return;
+                        }
+                    }
+
                     await provider.send("eth_requestAccounts", []);
                     signer = provider.getSigner();
                     const address = await signer.getAddress();
@@ -402,45 +430,71 @@
 
                     await updateBalance(address);
                 } catch (error) {
-                    console.error("User denied account access", error);
+                    console.error("Connection rejected or failed.", error);
+                } finally {
+                    btn.disabled = false;
                 }
             } else {
-                alert("MetaMask not detected. Please install a Web3 browser extension.");
+                alert("MetaMask not detected. Please install a secure Web3 extension.");
             }
         }
 
         async function updateBalance(accountAddress) {
             try {
+                if (!ethers.utils.isAddress(accountAddress)) return;
                 const balance = await tokenContract.balanceOf(accountAddress);
                 const formatted = ethers.utils.formatUnits(balance, 18);
                 document.getElementById("userBalance").innerText = parseFloat(formatted).toFixed(2) + " SIC";
             } catch (err) {
-                console.error("Failed to fetch balance", err);
+                console.error("Failed to fetch balance safely.", err);
             }
         }
 
         async function transferTokens() {
+            const tBtn = document.getElementById("transferBtn");
             if (!tokenContract) {
                 alert("Please connect your wallet first.");
                 return;
             }
-            const recipient = document.getElementById("recipientAddr").value;
+
+            const recipient = document.getElementById("recipientAddr").value.trim();
             const amount = document.getElementById("transferAmount").value;
-            if (!recipient || !amount) {
-                alert("Please fill in recipient address and amount.");
+
+            // Security check: Validate Ethereum recipient address format
+            if (!ethers.utils.isAddress(recipient)) {
+                alert("Invalid recipient Ethereum address format.");
                 return;
             }
+
+            // Security check: Validate amount
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                alert("Please enter a valid positive transfer amount.");
+                return;
+            }
+
             try {
+                tBtn.disabled = true;
+                tBtn.innerText = "Processing...";
+                
                 const parsedAmount = ethers.utils.parseUnits(amount, 18);
                 const tx = await tokenContract.transfer(recipient, parsedAmount);
-                alert("Transaction submitted! Hash: " + tx.hash);
+                
+                alert("Transaction submitted securely! Hash: " + tx.hash);
                 await tx.wait();
-                alert("Transfer confirmed!");
+                alert("Transfer confirmed on Sepolia!");
+                
                 const address = await signer.getAddress();
                 await updateBalance(address);
+                
+                // Clear input fields after success
+                document.getElementById("recipientAddr").value = "";
+                document.getElementById("transferAmount").value = "";
             } catch (err) {
-                console.error("Transfer failed", err);
-                alert("Transfer failed: " + (err.message || err));
+                console.error("Transfer execution failed", err);
+                alert("Transfer aborted or failed.");
+            } finally {
+                tBtn.disabled = false;
+                tBtn.innerText = "Execute Transfer";
             }
         }
 
@@ -459,7 +513,7 @@
                         },
                     });
                 } catch (error) {
-                    console.error(error);
+                    console.error("MetaMask asset addition rejected.", error);
                 }
             } else {
                 alert('MetaMask is not installed.');
@@ -467,12 +521,15 @@
         }
 
         function copyContractAddress() {
-            navigator.clipboard.writeText(CONTRACT_ADDRESS);
-            const btn = document.querySelector('.copy-btn');
-            btn.innerText = "[ COPIED! ]";
-            setTimeout(() => {
-                btn.innerText = "[ COPY ]";
-            }, 2000);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(CONTRACT_ADDRESS).then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    btn.innerText = "[ COPIED! ]";
+                    setTimeout(() => {
+                        btn.innerText = "[ COPY ]";
+                    }, 2000);
+                });
+            }
         }
     </script>
 </body>
